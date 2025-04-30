@@ -10,7 +10,7 @@ datasource db {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model daily_log {
-  id_daily_log Int      @id
+  id_daily_log Int      @id @default(autoincrement())
   id_habit     Int
   date         DateTime @db.Date
   status       Boolean?
@@ -20,7 +20,7 @@ model daily_log {
 }
 
 model habits {
-  id_habit   Int         @id
+  id_habit   Int         @id @default(autoincrement())
   id_user    Int
   name       String?     @db.VarChar
   created_at DateTime?   @default(now()) @db.Timestamp(6)
@@ -29,7 +29,7 @@ model habits {
 }
 
 model users {
-  id_user  Int      @id
+  id_user  Int      @id @default(autoincrement())
   name     String?  @db.VarChar
   lastname String?  @db.VarChar
   email    String?  @unique @db.VarChar

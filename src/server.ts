@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import morgan from 'morgan';
 import { PORT } from './config'
-// import { routes } from './routes'
+import { routes } from './routes';
 import cors from 'cors';
 // import { accessTokenAuth } from './middlewares/jwtAuth';
 
@@ -32,6 +32,8 @@ export class Server {
         name:'API'
       })
     });
+
+    this.app.use('/api/', routes.habitRoutes);
 
 
   }
