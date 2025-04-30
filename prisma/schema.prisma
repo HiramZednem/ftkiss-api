@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model daily_log {
+  id_daily_log Int      @id
+  id_habit     Int
+  date         DateTime @db.Date
+  status       Boolean?
+  habits       habits   @relation(fields: [id_habit], references: [id_habit], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([id_habit, date], map: "daily_log_id_habit_date_idx")
+}
+
+model habits {
+  id_habit   Int         @id
+  id_user    Int
+  name       String?     @db.VarChar
+  created_at DateTime?   @default(now()) @db.Timestamp(6)
+  daily_log  daily_log[]
+  users      users       @relation(fields: [id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id_user  Int      @id
+  name     String?  @db.VarChar
+  lastname String?  @db.VarChar
+  email    String?  @unique @db.VarChar
+  habits   habits[]
+}
