@@ -74,6 +74,13 @@ export class HabitController {
             }
     
             const updatedHabit = await this.habitService.update(this.validateId(req.params.userId), this.validateId(req.params.habitId), parse.data as HabitRequest);
+            const response: BaseResponse = {
+                success: true,
+                data: updatedHabit,
+                message: 'Habit created successfully'
+            }
+
+            res.status(201).json(response);
         } catch(e: any)  {
             console.error(e)
             res.status(500).json({ success: false, message: e.message });
