@@ -103,7 +103,7 @@ export class HabitController {
 
     private validateId(id: string) {
         if (!id || isNaN(Number(id))) {
-            throw "invalid user id";
+            throw Error("invalid user id");
         } 
         return Number(id);
     } 

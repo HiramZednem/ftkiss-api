@@ -33,9 +33,8 @@ export class Server {
       })
     });
 
-    this.app.use('/api/', routes.habitRoutes);
-
-
+    this.app.use('/api/habits', routes.habitRoutes);
+    this.app.use('/api/users', routes.userRoutes)
   }
 
   listen(){
