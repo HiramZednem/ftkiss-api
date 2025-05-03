@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import { UserSchema } from "../dtos/user/UserSchema";
 import { UserService } from "../services/user.service";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { LoginSchema } from "../dtos/user/LoginSchema";
+import { JWT_KEY } from "../config";
 
-// TODO: jwt and login
 export class UserController {
     private userService: UserService;
 
@@ -31,5 +33,32 @@ export class UserController {
             console.error(e)
             res.status(500).json({success: false, error: e.message})
         }
+    }
+
+    public async login(req: Request, res: Response) {
+        const parse = LoginSchema.safeParse(req.body);
+
+        if(!parse.success) {
+            res.status(400).json({ errors: parse.error.flatten().fieldErrors })
+            return;
+        }
+
+        const user = await this.userService.findByEmail(parse.data.email);
+        if (!user) {
+            res.status(401).json({ error: 'Authentication failed' });
+            return;
+        }
+
+        const passwordMatch = bcrypt.compare(parse.data.password, user.password!);
+        if (!passwordMatch) {
+            res.status(401).json({ error: 'Authentication failed' });
+            return;
+        }
+
+        const token = jwt.sign({ id_user: user.id_user}, JWT_KEY!, {
+            expiresIn: '1h',
+        });
+        // TODO: agregar datos del usuario...
+        res.status(200).json({ token });
     }
 }

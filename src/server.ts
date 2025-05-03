@@ -3,9 +3,9 @@ import morgan from 'morgan';
 import { PORT } from './config'
 import { routes } from './routes';
 import cors from 'cors';
-// import { accessTokenAuth } from './middlewares/jwtAuth';
+import { verifyToken } from './middlewares';
 
-
+// TODO: validar que se inicialize la conexion a la bd
 export class Server {
   private app: Express;
 
@@ -33,7 +33,7 @@ export class Server {
       })
     });
 
-    this.app.use('/api/habits', routes.habitRoutes);
+    this.app.use('/api/habits',verifyToken, routes.habitRoutes);
     this.app.use('/api/users', routes.userRoutes)
   }
 
