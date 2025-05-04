@@ -4,8 +4,8 @@ import { PORT } from './config'
 import { routes } from './routes';
 import cors from 'cors';
 import { verifyToken } from './middlewares';
+import { prisma } from './db/db';
 
-// TODO: validar que se inicialize la conexion a la bd
 export class Server {
   private app: Express;
 
@@ -37,10 +37,19 @@ export class Server {
     this.app.use('/api/users', routes.userRoutes)
   }
 
-  listen(){
-    this.app.listen(this.app.get('port'), ()=>{
-      console.log(`Server running on port ${this.app.get('port')}`);      
-    })
+  async listen(){
+    try {
+      await prisma.$connect();
+      console.log('✅ Database connection established');
+      
+
+      this.app.listen(this.app.get('port'), ()=>{
+        console.log(`🚀 Server running on port ${this.app.get('port')}`);      
+      })
+    } catch(error: any) {
+      console.error('❌ Error connecting to database:', error);
+      process.exit(1);
+    }
   }
 
 }
