@@ -14,7 +14,6 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
         req.app.locals.id_user = (decoded as JwtPayload).id_user; 
         next();
     } catch (error) {
-        console.log(error)
         res.status(401).json({ error: 'Invalid token' });
     }
 };

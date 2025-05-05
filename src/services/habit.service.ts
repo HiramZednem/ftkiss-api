@@ -7,14 +7,16 @@ export class HabitService {
 
     constructor() {}
 
-    // obtener todos
     public async getAll(id_user: number) {
         return await prisma.habits.findMany({where: {id_user: id_user}});
     }
 
-    // obtener uno  (Esta a futuro estara enfocado en las estadisticas...)
     public async get(id_user: number, id_habit: number) {
-        return await prisma.habits.findMany({where: {id_user: id_user, id_habit: id_habit}});
+        const habit = await prisma.habits.findFirst({where: {id_user: id_user, id_habit: id_habit}});
+        if(!habit) {
+            throw new Error(`Habit with id: ${id_habit} not found`)
+        }
+        return habit;
     }
 
     public async create(habit: HabitRequest) {

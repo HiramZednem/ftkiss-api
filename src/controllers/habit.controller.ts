@@ -4,8 +4,8 @@ import { HabitService } from "../services/habit.service";
 import { BaseResponse } from "../dtos/BaseResponse";
 import { HabitRequest } from "../dtos/habit/HabitRequest";
 
-// TODO: ver si existe una mejor manerja de trabajar el response builder...
-// TODO: El userId, sacarlo del servicio de tokens
+// TODO: add as habitResponse
+// TODO: add habit uuid
 export class HabitController {
     private habitService: HabitService;
     
@@ -15,7 +15,7 @@ export class HabitController {
 
     public async getAll (req: Request, res: Response) {
         try {
-            const habits = await this.habitService.getAll(this.validateId(req.params.userId));
+            const habits = await this.habitService.getAll(this.validateId(req.app.locals.id_user));
 
             const response: BaseResponse = {
                 success: true,
@@ -29,9 +29,10 @@ export class HabitController {
         }
     } 
 
+    // TODO: add statistics
     public async get(req: Request, res: Response) {
         try {
-            const habit = await this.habitService.get(this.validateId(req.params.userId), this.validateId(req.params.habitId))
+            const habit = await this.habitService.get(this.validateId(req.app.locals.id_user), this.validateId(req.params.habitId))
             const response: BaseResponse = {
                 success: true,
                 data: habit, 
@@ -51,7 +52,7 @@ export class HabitController {
         }
 
         try {
-            const habitCreated = await this.habitService.create({id_user: this.validateId(req.params.userId), ...parse.data} as HabitRequest);
+            const habitCreated = await this.habitService.create({id_user: this.validateId(req.app.locals.id_user), ...parse.data} as HabitRequest);
 
             const response: BaseResponse = {
                 success: true,
@@ -73,7 +74,7 @@ export class HabitController {
                 res.status(400).json({ errors: parse.error.flatten().fieldErrors });
             }
     
-            const updatedHabit = await this.habitService.update(this.validateId(req.params.userId), this.validateId(req.params.habitId), parse.data as HabitRequest);
+            const updatedHabit = await this.habitService.update(this.validateId(req.app.locals.id_user), this.validateId(req.params.habitId), parse.data as HabitRequest);
             const response: BaseResponse = {
                 success: true,
                 data: updatedHabit,
@@ -89,10 +90,10 @@ export class HabitController {
 
     public async delete(req: Request, res: Response) {
         try {
-            this.habitService.delete(this.validateId(req.params.userId) ,this.validateId(req.params.habitId));
+            this.habitService.delete(this.validateId(req.app.locals.id_user) ,this.validateId(req.params.habitId));
             const response: BaseResponse =  {
                 success: true,
-                message: `Habit with id: ${Number(req.params.userId)} deleted succesfully`          
+                message: `Habit with id: ${Number(req.params.habitId)} deleted succesfully`          
             };
             res.status(200).json(response);
         } catch ( e: any ) {
