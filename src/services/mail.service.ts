@@ -1,14 +1,21 @@
 import nodemailer from "nodemailer";
+import { SMTP_URL } from "../config";
 
 export class MailService {
     private static instance: MailService;
     private transporter;
+    private from: string;
 
     private constructor() {
-        const poolConfig = process.env.SMTP_URL;
-        if (!poolConfig) throw new Error("SMTP_URL no definido en .env");
 
-        this.transporter = nodemailer.createTransport(poolConfig);
+        const parsed = new URL(SMTP_URL);
+        const smtpUser = decodeURIComponent(parsed.username);
+
+        if (!smtpUser) throw new Error("No se pudo extraer el usuario SMTP de SMTP_URL");
+
+        this.from = `"FTKISS" <${smtpUser}>`;
+
+        this.transporter = nodemailer.createTransport(SMTP_URL);
     }
 
     public static getInstance(): MailService {
@@ -19,17 +26,12 @@ export class MailService {
     }
 
     public async send(to: string, subject: string, html: string) {
-        try {
-            const info = await this.transporter.sendMail({
-                from: `"FTKISS" <${process.env.SMTP_USER}>`,
-                to,
-                subject,
-                html,
-            });
-            console.log("Email enviado:", info.messageId);
-        } catch (error) {
-            console.error("Error al enviar correo:", error);
-            throw new Error("Error al enviar correo");
-        }
+        const info = await this.transporter.sendMail({
+            from: this.from,
+            to,
+            subject,
+            html,
+        });
+        console.log("📨 Correo enviado:", info.messageId);
     }
 }
