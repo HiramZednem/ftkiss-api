@@ -7,14 +7,10 @@ export class MailService {
     private from: string;
 
     private constructor() {
-
         const parsed = new URL(SMTP_URL);
         const smtpUser = decodeURIComponent(parsed.username);
-
-        if (!smtpUser) throw new Error("No se pudo extraer el usuario SMTP de SMTP_URL");
-
+        if (!smtpUser) throw new Error("SMTP_USER not found");
         this.from = `"FTKISS" <${smtpUser}>`;
-
         this.transporter = nodemailer.createTransport(SMTP_URL);
     }
 
@@ -32,6 +28,6 @@ export class MailService {
             subject,
             html,
         });
-        console.log("📨 Correo enviado:", info.messageId);
+        console.log("Message sent: %s", info.messageId);
     }
 }
