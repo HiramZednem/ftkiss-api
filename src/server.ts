@@ -5,6 +5,7 @@ import { routes } from './routes';
 import cors from 'cors';
 import { verifyToken } from './middlewares';
 import { prisma } from './db/db';
+import { MailService } from './services/mail.service';
 
 export class Server {
   private app: Express;
@@ -37,17 +38,19 @@ export class Server {
     this.app.use('/api/users', routes.userRoutes)
   }
 
-  async listen(){
+  async listen() {
     try {
       await prisma.$connect();
       console.log('✅ Database connection established');
-      
 
+      MailService.getInstance();
+      console.log('📨 MailService initialized');
+  
       this.app.listen(this.app.get('port'), ()=>{
         console.log(`🚀 Server running on port ${this.app.get('port')}`);      
       })
     } catch(error: any) {
-      console.error('❌ Error connecting to database:', error);
+      console.error('❌ Error during server initialization:', error);
       process.exit(1);
     }
   }
