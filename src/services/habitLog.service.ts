@@ -19,6 +19,23 @@ export class HabitLogService {
         });
     }
 
+    public async getAllLogsByUser(userId: number) {
+        return prisma.habits.findMany({
+            where: { id_user: userId },
+            select: {
+            id_habit: true,
+            name: true,
+            daily_log: {
+                select: {
+                date: true,
+                status: true,
+                },
+            },
+            },
+        });
+    }
+
+
 }
 
 
