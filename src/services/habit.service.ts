@@ -35,5 +35,12 @@ export class HabitService {
         return await prisma.habits.delete({where: {id_user: id_user, id_habit: habitToDelete.id_habit}});
     }
 
+    public async getHabitById(id_habit: number) {
+        return prisma.habits.findUnique({
+        where: {
+            id_habit,
+        },
+        });
+    }
 
 }

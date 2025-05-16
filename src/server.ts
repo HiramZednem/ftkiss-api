@@ -34,8 +34,9 @@ export class Server {
       })
     });
 
-    this.app.use('/api/habits',verifyToken, routes.habitRoutes);
+    this.app.use('/api/habits', verifyToken, routes.habitRoutes);
     this.app.use('/api/users', routes.userRoutes)
+    this.app.use('/api/habit-logs', verifyToken, routes.habitLogRoutes);
   }
 
   async listen() {
