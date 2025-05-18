@@ -16,4 +16,4 @@ router.delete('/:habitUuid', habitController.delete.bind(habitController));
 // Habit Log Routes
 router.post('/log', habitLogController.upsert.bind(habitLogController));
 
-export default router;
+export const habitRoutes = router;

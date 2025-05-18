@@ -8,4 +8,4 @@ const habitLogController = new HabitLogController();
 router.post('/', verifyToken, habitLogController.upsert.bind(habitLogController));
 router.get('/', verifyToken, habitLogController.getAll.bind(habitLogController));
 
-export default router;
+export const habitLogRoutes = router;
