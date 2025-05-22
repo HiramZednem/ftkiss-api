@@ -1,9 +1,9 @@
 import { habitRoutes } from './habit.routes';
 import { userRoutes } from './user.routes'
-import { habitLogRoutes } from './habitLog.routes';
+import { dailyLogsRoutes } from './dailyLog.routes';
 
 export const routes = {
     habitRoutes,
     userRoutes,
-    habitLogRoutes
+    dailyLogsRoutes,
 }

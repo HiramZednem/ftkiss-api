@@ -5,7 +5,8 @@
   "scripts": {
   "dev": "nodemon",
   "build": "rimraf ./dist && tsc && npx prisma generate",
-  "start": "npx prisma migrate deploy && node dist/app.js"
+  "start": "npx prisma migrate deploy && node dist/app.js",
+  "deploy": "npm run build && npm start"
 },
   "author": "",
   "license": "ISC",

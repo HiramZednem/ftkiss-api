@@ -17,6 +17,3 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
         res.status(401).json({ error: 'Invalid token' });
     }
 };
-
-
-//todo debe tener 

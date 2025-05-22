@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { HabitController } from '../controllers/habit.controller';
-import { HabitLogController } from '../controllers/habitLog.controller';
+import { DailyLogController } from '../controllers/dailyLog.controller';
 
 
 const router = Router();
 const habitController = new HabitController();
-const habitLogController = new HabitLogController();
+const dailyLogController = new DailyLogController();
 
 router.get('/', habitController.getAll.bind(habitController));
 router.get('/:habitUuid', habitController.get.bind(habitController));
@@ -13,7 +13,5 @@ router.post('/', habitController.create.bind(habitController));
 router.patch('/:habitUuid', habitController.update.bind(habitController));
 router.delete('/:habitUuid', habitController.delete.bind(habitController));
 
-// Habit Log Routes
-router.post('/log', habitLogController.upsert.bind(habitLogController));
 
 export const habitRoutes = router;

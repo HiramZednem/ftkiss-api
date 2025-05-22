@@ -20,7 +20,7 @@ model daily_log {
 }
 
 model habits {
-  uuid String @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uuid String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   id_habit   Int         @id @default(autoincrement())
   id_user    Int
   name       String?     @db.VarChar

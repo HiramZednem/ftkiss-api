@@ -2,7 +2,6 @@
 import { prisma } from "../db/db";
 import { HabitRequest } from "../dtos/habit/HabitRequest";
 
-
 export class HabitService {
 
     constructor() {}
@@ -37,9 +36,9 @@ export class HabitService {
 
     public async getHabitById(id_habit: number) {
         return prisma.habits.findUnique({
-        where: {
-            id_habit,
-        },
+            where: {
+                id_habit,
+            },
         });
     }
 
