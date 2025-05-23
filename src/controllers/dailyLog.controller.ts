@@ -3,6 +3,8 @@ import { DailyLogService } from "../services/dailyLog.service";
 import { BaseResponse } from '../dtos/BaseResponse';
 import { dailyLogSchema } from "../dtos/dailyLog/dailySchema";
 import { HabitService } from "../services/habit.service";
+import { toDailyLogResponse } from "../dtos/dailyLog/dailyLogMapper";
+
 
 export class DailyLogController {
     private dailyLogService: DailyLogService;
@@ -20,16 +22,29 @@ export class DailyLogController {
             if (!result.success) {
                 res.status(400).json({ 
                     success: false, 
-                    errors: result.error.format() 
+                    errors: result.error.flatten().fieldErrors
                 });
                 return;
             }
+            const id_user = this.validateId(req.app.locals.id_user);
+            
+            if (!id_user) {
+                const response: BaseResponse = {
+                    success: false,
+                    message: 'Invalid user ID'
+                };
+                res.status(400).json(response);
+                return;
+            }
 
-            const toggled = await this.dailyLogService.toggleLog(result.data);
+            const toggled = await this.dailyLogService.toggleLog(result.data, id_user);
 
-            res.status(200).json({ 
-                success: true, data: toggled 
-            });
+            const response: BaseResponse = {
+                success: true,
+                data: toDailyLogResponse(toggled),
+                message: "Log actualizado",
+            };
+            res.status(200).json(response);
 
         } catch (err: any) {
             console.error("Error toggling daily log by uuid:", err);
@@ -44,13 +59,6 @@ export class DailyLogController {
     public async getAll(req: Request, res: Response) {
         try {
             const dailyLogs = await this.habitService.getAll(this.validateId(req.app.locals.id_user));
-            if (!dailyLogs) {
-                res.status(404).json({
-                    success: false,
-                    message: "No daily logs found"
-                });
-                return;
-            }
             
             const response: BaseResponse = {
                 success: true,

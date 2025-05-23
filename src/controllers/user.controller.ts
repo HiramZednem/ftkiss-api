@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import { LoginSchema } from "../dtos/user/LoginSchema";
 import { JWT_KEY } from "../config";
 
+
 export class UserController {
     private userService: UserService;
 

@@ -1,6 +1,7 @@
 import { prisma } from "../db/db";
 import { UserRequest } from "../dtos/user/UserSchema";
 
+
 export class UserService {
     constructor(){}
 

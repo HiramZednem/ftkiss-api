@@ -1,33 +1,28 @@
 import { prisma } from "../db/db";
 import { DailyLogInput } from "../dtos/dailyLog/dailyLog";
+import { HabitService } from "./habit.service";
+
 
 export class DailyLogService {
-  constructor() {}
+  private habitService: HabitService;
+  constructor() {
+    this.habitService = new HabitService();
+  }
 
-  public async toggleLog(input: DailyLogInput) {
-    const habit = await prisma.habits.findUnique({
-      where: { uuid: input.uuid_habit },
-    });
+  public async toggleLog(input: DailyLogInput, id_user: number) {
+    const habit = await this.habitService.get(id_user, input.uuid_habit);
 
     if (!habit) {
       throw new Error("Habit not found");
     }
-    const parsedDate = new Date(input.date);
 
-    const existingLog = await prisma.daily_log.findUnique({
-      where: {
-        id_habit_date: {
-          id_habit: habit.id_habit,
-          date: parsedDate,
-        },
-      },
-    });
+    const dailyLog = await this.getExistingLog(habit.id_habit, input.date);
 
-    if (!existingLog) {
+    if (!dailyLog) {
       return prisma.daily_log.create({
         data: {
           id_habit: habit.id_habit,
-          date: parsedDate,
+          date: input.date,
           status: true,
         },
       });
@@ -37,11 +32,22 @@ export class DailyLogService {
       where: {
         id_habit_date: {
           id_habit: habit.id_habit,
-          date: parsedDate,
+          date: input.date,
         },
       },
       data: {
-        status: !existingLog.status,
+        status: !dailyLog.status,
+      },
+    });
+  }
+
+  public async getExistingLog(id_habit: number, date: Date) {
+    return prisma.daily_log.findUnique({
+      where: {
+        id_habit_date: {
+          id_habit: id_habit,
+          date: date,
+        },
       },
     });
   }

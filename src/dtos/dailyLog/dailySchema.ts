@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
+
 export const dailyLogSchema = z.object({
-    uuid_habit: z.string({
-        required_error: "uuid_habit is required",
-        invalid_type_error: "uuid_habit must be a string",
+    uuid_habit: z.string().uuid({
+        message: "uuid_habit must be a valid UUID",
     }),
-    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-        message: "date must be in YYYY-MM-DD format",
-    }),
+    date: z.date({
+        required_error: "date is required",
+        invalid_type_error: "date must be a valid date",
+    })
 });

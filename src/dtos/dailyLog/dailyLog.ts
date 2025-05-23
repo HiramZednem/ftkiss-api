@@ -1,10 +1,11 @@
 export interface DailyLogInput {
     uuid_habit: string;
-    date: string;
-    
+    date: Date;
 }
+export interface DailyLogResponse {
+    date: Date;
+    status: boolean;
+    habitName: string;
+    habitUuid: string;
 
-export interface DailyLogDeleteInput {
-    uuid_habit: string;
-    date: string;
 }

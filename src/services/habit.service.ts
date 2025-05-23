@@ -2,6 +2,7 @@
 import { prisma } from "../db/db";
 import { HabitRequest } from "../dtos/habit/HabitRequest";
 
+
 export class HabitService {
 
     constructor() {}
@@ -32,14 +33,6 @@ export class HabitService {
     public async delete(id_user: number, uuid_habit: string) {
         const habitToDelete = await this.get(id_user, uuid_habit); 
         return await prisma.habits.delete({where: {id_user: id_user, id_habit: habitToDelete.id_habit}});
-    }
-
-    public async getHabitById(id_habit: number) {
-        return prisma.habits.findUnique({
-            where: {
-                id_habit,
-            },
-        });
     }
 
 }
