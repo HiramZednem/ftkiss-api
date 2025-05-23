@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import { SMTP_URL } from "../config";
 
+
 export class MailService {
     private static instance: MailService;
     private transporter;

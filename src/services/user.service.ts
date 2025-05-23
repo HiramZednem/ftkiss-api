@@ -1,6 +1,7 @@
 import { prisma } from "../db/db";
 import { UserRequest } from "../dtos/user/UserSchema";
 
+
 export class UserService {
     constructor(){}
 
@@ -10,7 +11,7 @@ export class UserService {
         });
       
         if (existingUser) {
-        throw new Error('Email already registered');
+            throw new Error('Email already registered');
         }
         return await prisma.users.create({data: user})
     }
