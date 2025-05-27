@@ -1,7 +1,12 @@
-import nodemailer from "nodemailer";
-import { SMTP_URL } from "../config";
+import fs from 'fs';
+import path from 'path';
+import handlebars from 'handlebars';
+import nodemailer from 'nodemailer';
+import { SMTP_URL } from '../config';
+
 
 export class MailService {
+
     private static instance: MailService;
     private transporter;
     private from: string;
@@ -21,7 +26,14 @@ export class MailService {
         return MailService.instance;
     }
 
-    public async send(to: string, subject: string, html: string) {
+    private renderTemplate(templateName: string, data: Record<string, any>): string {
+        const templatePath = path.join(__dirname, '..', 'templates', `${templateName}.hbs`);
+        const source = fs.readFileSync(templatePath, 'utf8');
+        const compiled = handlebars.compile(source);
+        return compiled(data);
+    }
+
+    private async send(to: string, subject: string, html: string) {
         const info = await this.transporter.sendMail({
             from: this.from,
             to,
@@ -29,5 +41,15 @@ export class MailService {
             html,
         });
         console.log("Message sent: %s", info.messageId);
+    }
+
+    public async sendWithTemplate(
+        to: string,
+        subject: string,
+        templateName: string,
+        data: Record<string, any>
+    ) {
+        const html = this.renderTemplate(templateName, data);
+        await this.send(to, subject, html);
     }
 }
