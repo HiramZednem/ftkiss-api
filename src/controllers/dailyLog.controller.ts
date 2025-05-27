@@ -26,18 +26,8 @@ export class DailyLogController {
                 });
                 return;
             }
-            const id_user = this.validateId(req.app.locals.id_user);
-            
-            if (!id_user) {
-                const response: BaseResponse = {
-                    success: false,
-                    message: 'Invalid user ID'
-                };
-                res.status(400).json(response);
-                return;
-            }
 
-            const toggled = await this.dailyLogService.toggleLog(result.data, id_user);
+            const toggled = await this.dailyLogService.toggleLog(result.data, this.validateId(req.app.locals.id_user));
 
             const response: BaseResponse = {
                 success: true,
@@ -55,7 +45,7 @@ export class DailyLogController {
             return;
         }
     }
-
+    // TODO: quitar cuando se implemente en el controlador de habits
     public async getAll(req: Request, res: Response) {
         try {
             const dailyLogs = await this.habitService.getAll(this.validateId(req.app.locals.id_user));

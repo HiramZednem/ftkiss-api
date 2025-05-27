@@ -1,20 +1,18 @@
 import { prisma } from "../db/db";
-import { DailyLogInput } from "../dtos/dailyLog/dailyLog";
+import { DailyLogInput } from "../dtos/dailyLog/dailySchema";
 import { HabitService } from "./habit.service";
 
 
 export class DailyLogService {
+
   private habitService: HabitService;
+
   constructor() {
     this.habitService = new HabitService();
   }
 
   public async toggleLog(input: DailyLogInput, id_user: number) {
     const habit = await this.habitService.get(id_user, input.uuid_habit);
-
-    if (!habit) {
-      throw new Error("Habit not found");
-    }
 
     const dailyLog = await this.getExistingLog(habit.id_habit, input.date);
 
